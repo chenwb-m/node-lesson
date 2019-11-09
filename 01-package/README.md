@@ -72,6 +72,9 @@ npm install jquery@1.12.4
 ```
 npm install --save-dev mocha
 ```
+> 对于生产环境，可以使用 --production 指明只安装 dependencies 包
+>
+> `npm install --production`
 
 ### 安装本地文件路径包
 
@@ -137,7 +140,7 @@ npm install moduleName file://path
     * `alpha` 内测版本，例如：1.0.0-alpha.1
     * `beta` 公测版本，例如：1.0.0-beta.1
     * `rc` 即 Release Candiate，正式版本的候选版本，例如：1.0.0-rc.1
-* 版本号必需能通过 [The semantic versioner for npm ](https://docs.npmjs.com/misc/semver) 较验。 
+* 版本号必需能通过 [The semantic versioner for npm ](https://docs.npmjs.com/misc/semver) 较验。
 
 ## keywords
 
@@ -193,13 +196,13 @@ npm install moduleName file://path
 * 常见于插件包，例如：[html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin/blob/master/package.json)
     * 对于 npm v2 版本，peerDependencies 包会被安装到宿主环境中。
     * 对于 npm v3 版本，用于声明在安装本包时，宿主环境上需存在指定的包。
-    
+
 <br />
 <br />
 
 # module 导出与引用
-> base-module 案例：./base-module  
-> base-project 案例：./base-project  
+> base-module 案例：./base-module
+> base-project 案例：./base-project
 
 使用 CommonJS 模块规范
 
@@ -269,13 +272,13 @@ Node.js 原生提供的模块，在 Node.js 安装过程中已编译进其执行
 2. 根据模块标识符进行路径分析
 
     2.1 如果是以路径标识符开头，例如 `./`、`../` 或 `/`，优先作文件分析
-        
+
     * 如果路径标识符包含扩展名，则优先完全匹配查找文件
 
     * 如果没有扩展名或上一步未命中，则使用扩展名分析（尝试依次添加 `.js`、`.json`、`.node` 后查找文件）
-        > debug `console.log(module.paths)`
+        > debug `console.log(require.extensions);`
 
-    * 如果上一步未命中，但路径能完全匹配一个目录，则作为目录分析，将目录作为一个扩展包分析
+    * 如果上一步未命中，但路径能完全匹配一个目录，则作为目录分析，将目录作为一个扩展模块分析
 
     2.2 查找核心模块
 
@@ -283,13 +286,13 @@ Node.js 原生提供的模块，在 Node.js 安装过程中已编译进其执行
 
     > 扩展模块的查找顺序为：从当前目录下的 node_modules 目录下开始查找，沿路径向上逐级查找 node_modules 目录下查找，直到根目录下的 node_modules 目录。
 
-    > debug `console.log(require.extensions);`
+    > debug `console.log(module.paths)`
 
     * 查找包目录下的 package.json 文件，并使用 `JSON.parse()` 解析内容取出 `main` 属性值作为包入口
 
-    * 如果 `main` 属性值不包含扩展名，则使用扩展名分析
+    * 如果 `main` 属性值不包含扩展名，则使用 index 作为入口文件名，作扩展名分析
 
-    * 如果没有 package.json 文件，或 `main` 属性不存在，则默认使用 index 作为入口，并使用扩展名分析。
+    * 如果没有 package.json 文件，或 `main` 属性不存在，则默认使用 `index` 作为默认文件名，并使用扩展名分析
 
 3. 编译执行
 
@@ -299,7 +302,7 @@ Node.js 原生提供的模块，在 Node.js 安装过程中已编译进其执行
 
     3.3 *.node* 一般为 C/C++ 扩展编译后文件，使用 `dlopen()` 方法加载文件。
 
-    3.4 *.\** 如果未注册解析器，则当作 *.js* 文件载入。 
+    3.4 *.\** 如果未注册解析器，则当作 *.js* 文件载入。
 
 ### js 文件加载
 
@@ -397,7 +400,13 @@ var baz = require('installed-baz'); // Works
 * 在国内能极大地加快项目依赖包的安装速度
 * 使用公司内部 npm 源
 
-### 配置文件 .npmrc
+### 使用命令行设置
+
+```bash
+npm config set registry https://registry.npmjs.org
+```
+
+### 更改配置文件 〜/.npmrc
 
 #### 官方源
 
@@ -414,4 +423,3 @@ registry=https://registry.npm.taobao.org
 ### 使用 nrm 切换源
 
 > https://github.com/Pana/nrm
-
