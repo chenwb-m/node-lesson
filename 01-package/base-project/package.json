@@ -14,7 +14,7 @@
   "dependencies": {
     "app-module-path": "^2.2.0",
     "base-module": "file:../base-module",
-    "jquery": "^1.12.4",
+    "jquery": "^3.5.0",
     "lodash": "^4.17.15"
   },
   "devDependencies": {
